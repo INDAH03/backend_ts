@@ -13,15 +13,27 @@ InvitedUser.init({
         defaultValue: sequelize_1.DataTypes.UUIDV4,
         primaryKey: true
     },
-    name: sequelize_1.DataTypes.STRING,
-    email: sequelize_1.DataTypes.STRING,
-    role: sequelize_1.DataTypes.STRING,
-    project: sequelize_1.DataTypes.STRING,
-    action: {
+    name: {
         type: sequelize_1.DataTypes.STRING,
-        defaultValue: 'pending'
+        allowNull: false
     },
-    invitedAt: sequelize_1.DataTypes.DATE
+    email: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: false
+    },
+    role: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: false
+    },
+    project: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: false
+    },
+    invitedAt: {
+        type: sequelize_1.DataTypes.DATE,
+        defaultValue: sequelize_1.DataTypes.NOW,
+        allowNull: false
+    }
 }, {
     sequelize: database_1.default,
     modelName: 'InvitedUser',

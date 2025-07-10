@@ -7,20 +7,20 @@ interface InvitedUserAttributes {
   email: string;
   role: string;
   project: string;
-  action: string;     
   invitedAt: Date;
 }
 
-interface InvitedUserCreationAttributes extends Optional<InvitedUserAttributes, 'uuid' | 'action' | 'invitedAt'> {}
+interface InvitedUserCreationAttributes extends Optional<InvitedUserAttributes, 'uuid' | 'invitedAt'> {}
 
-class InvitedUser extends Model<InvitedUserAttributes, InvitedUserCreationAttributes> implements InvitedUserAttributes {
+class InvitedUser extends Model<InvitedUserAttributes, InvitedUserCreationAttributes>
+  implements InvitedUserAttributes {
   public uuid!: string;
   public name!: string;
   public email!: string;
   public role!: string;
   public project!: string;
-  public action!: string;
   public invitedAt!: Date;
+
 }
 
 InvitedUser.init({
@@ -29,15 +29,27 @@ InvitedUser.init({
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true
   },
-  name: DataTypes.STRING,
-  email: DataTypes.STRING,
-  role: DataTypes.STRING,
-  project: DataTypes.STRING,
-  action: {
+  name: {
     type: DataTypes.STRING,
-    defaultValue: 'pending'
+    allowNull: false
   },
-  invitedAt: DataTypes.DATE
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  role: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  project: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  invitedAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+    allowNull: false
+  }
 }, {
   sequelize,
   modelName: 'InvitedUser',

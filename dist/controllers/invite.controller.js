@@ -6,15 +6,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteInvitedUser = exports.updateUserRole = exports.resendInvite = exports.getAllInvitedUsers = exports.inviteUser = void 0;
 const InvitedUser_1 = __importDefault(require("../models/InvitedUser"));
 const inviteUser = async (req, res) => {
-    const { name, email, role, project } = req.body;
+    const { email, role, project } = req.body;
+    const generateNameFromEmail = (email) => {
+        const prefix = email.split('@')[0];
+        return prefix
+            .split(/[._-]/)
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    };
+    const name = generateNameFromEmail(email);
     try {
         const user = await InvitedUser_1.default.create({
-            name, email, role, project,
+            name,
+            email,
+            role,
+            project,
             invitedAt: new Date()
         });
         res.status(201).json(user);
     }
     catch (err) {
+        console.error('Invite Error:', err);
         res.status(500).json({ message: 'Invite failed', error: err });
     }
 };
@@ -50,7 +62,7 @@ const updateUserRole = async (req, res) => {
         }
         user.role = role;
         await user.save();
-        res.json({ message: 'Role updated' });
+        res.json(user);
     }
     catch (err) {
         res.status(500).json({ message: 'Update role failed', error: err });

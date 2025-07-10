@@ -1,15 +1,31 @@
 import { Request, Response } from 'express';
 import InvitedUser from '../models/InvitedUser';
+import sequelize from '../config/database';
 
 export const inviteUser = async (req: Request, res: Response): Promise<void> => {
-  const { name, email, role, project } = req.body;
+  const { email, role, project } = req.body;
+
+  const generateNameFromEmail = (email: string): string => {
+    const prefix = email.split('@')[0];
+    return prefix
+      .split(/[._-]/)
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
+
+  const name = generateNameFromEmail(email);
+
   try {
     const user = await InvitedUser.create({
-      name, email, role, project,
+      name,
+      email,
+      role,
+      project,
       invitedAt: new Date()
     });
     res.status(201).json(user);
   } catch (err) {
+    console.error('Invite Error:', err);
     res.status(500).json({ message: 'Invite failed', error: err });
   }
 };
@@ -46,7 +62,7 @@ export const updateUserRole = async (req: Request, res: Response): Promise<void>
 
     user.role = role;
     await user.save();
-    res.json({ message: 'Role updated' });
+    res.json(user);
   } catch (err) {
     res.status(500).json({ message: 'Update role failed', error: err });
   }

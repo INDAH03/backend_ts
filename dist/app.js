@@ -19,6 +19,9 @@ app.use('/api', Project_route_1.default);
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+app.get("/", (req, res) => {
+    res.send("Halo dari backend TypeScript di Render!");
+});
 database_1.default.sync().then(() => {
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
