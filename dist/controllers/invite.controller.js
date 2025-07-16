@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteInvitedUser = exports.updateUserRole = exports.resendInvite = exports.getAllInvitedUsers = exports.inviteUser = void 0;
+exports.deleteInvitedUser = exports.updateInvitedUser = exports.resendInvite = exports.getAllInvitedUsers = exports.inviteUser = void 0;
 const InvitedUser_1 = __importDefault(require("../models/InvitedUser"));
 const inviteUser = async (req, res) => {
     const { email, role, project } = req.body;
@@ -51,24 +51,33 @@ const resendInvite = async (req, res) => {
     }
 };
 exports.resendInvite = resendInvite;
-const updateUserRole = async (req, res) => {
+// invite.controller.ts
+const updateInvitedUser = async (req, res) => {
     const { uuid } = req.params;
-    const { role } = req.body;
+    console.log('Incoming update payload:', req.body);
+    const { name, email, role } = req.body;
     try {
         const user = await InvitedUser_1.default.findByPk(uuid);
         if (!user) {
             res.status(404).json({ message: 'User not found' });
             return;
         }
-        user.role = role;
+        // hanya update field yang ada
+        if (name !== undefined)
+            user.name = name;
+        if (email !== undefined)
+            user.email = email;
+        if (role !== undefined)
+            user.role = role;
         await user.save();
         res.json(user);
     }
     catch (err) {
-        res.status(500).json({ message: 'Update role failed', error: err });
+        console.error('Update failed:', err);
+        res.status(500).json({ message: 'Update user failed', error: err });
     }
 };
-exports.updateUserRole = updateUserRole;
+exports.updateInvitedUser = updateInvitedUser;
 const deleteInvitedUser = async (req, res) => {
     const { uuid } = req.params;
     try {

@@ -50,9 +50,11 @@ export const resendInvite = async (req: Request, res: Response): Promise<void> =
   }
 };
 
-export const updateUserRole = async (req: Request, res: Response): Promise<void> => {
+export const updateInvitedUser = async (req: Request, res: Response): Promise<void> => {
   const { uuid } = req.params;
-  const { role } = req.body;
+  console.log('Incoming update payload:', req.body);
+  const { name, email, role } = req.body;
+
   try {
     const user = await InvitedUser.findByPk(uuid);
     if (!user) {
@@ -60,11 +62,16 @@ export const updateUserRole = async (req: Request, res: Response): Promise<void>
       return;
     }
 
-    user.role = role;
+    // hanya update field yang ada
+    if (name !== undefined) user.name = name;
+    if (email !== undefined) user.email = email;
+    if (role !== undefined) user.role = role;
+
     await user.save();
     res.json(user);
   } catch (err) {
-    res.status(500).json({ message: 'Update role failed', error: err });
+    console.error('Update failed:', err);
+    res.status(500).json({ message: 'Update user failed', error: err });
   }
 };
 

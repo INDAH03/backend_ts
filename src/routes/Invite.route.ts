@@ -3,7 +3,7 @@ import {
   inviteUser,
   getAllInvitedUsers,
   resendInvite,
-  updateUserRole,
+  updateInvitedUser, 
   deleteInvitedUser
 } from '../controllers/invite.controller';
 
@@ -12,7 +12,7 @@ const router = express.Router();
 router.post('/invite', inviteUser);
 router.get('/invite', getAllInvitedUsers);
 router.post('/invite/resend/:uuid', resendInvite);
-router.put('/invite/role/:uuid', updateUserRole);
+router.put('/invite/:uuid', updateInvitedUser); 
 router.delete('/invite/:uuid', deleteInvitedUser);
 
 export default router;

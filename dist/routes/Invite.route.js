@@ -9,6 +9,6 @@ const router = express_1.default.Router();
 router.post('/invite', invite_controller_1.inviteUser);
 router.get('/invite', invite_controller_1.getAllInvitedUsers);
 router.post('/invite/resend/:uuid', invite_controller_1.resendInvite);
-router.put('/invite/role/:uuid', invite_controller_1.updateUserRole);
+router.put('/invite/:uuid', invite_controller_1.updateInvitedUser);
 router.delete('/invite/:uuid', invite_controller_1.deleteInvitedUser);
 exports.default = router;
